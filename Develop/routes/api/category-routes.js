@@ -36,10 +36,31 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new category
+  try {
+    const categoryInfo = await Category.create(req.body);
+    res.status(200).json(categoryInfo);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
+  try {
+    const categoryInfo = await Category.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!categoryInfo) {
+      res.status(404).json({ message: "No category of this Id found" });
+      return;
+    }
+    res.status(200).json(categoryInfo);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.delete('/:id', (req, res) => {
