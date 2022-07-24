@@ -36,11 +36,31 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new tag
-  
+  try {
+    const tagInfo = await Tag.create(req.body);
+    res.status(200).json(tagInfo);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
+  try {
+    const tagInfo = await Tag.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!tagInfo) {
+      res.status(404).json({ message: "No tag in this id" });
+      return;
+    }
+    res.status(200).json(tagInfo);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.delete('/:id', (req, res) => {
